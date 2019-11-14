@@ -7,7 +7,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <title>Nationals Park Mobile Map</title>
         <!-- CSS Links -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> 
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="lib/leaflet.zoomhome.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.css">
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -15,10 +16,17 @@
         <link href="css/style.css" rel="stylesheet">
     </head>
     <body>
+        <div style="background-color:red">
+            <center>Nats Park</center>
+        </div>
         <div id="map"></div>
+        <!-- <div style="background-color:red; position: absolute; bottom:0">
+            <center>Nats Park</center>
+        </div> -->
         <!-- Data -->
         <!-- External script links -->
         <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
+        <script src="lib/leaflet.zoomhome.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/src/L.Control.Locate.min.js" charset="utf-8"></script>
         <script src="https://unpkg.com/esri-leaflet@2.3.1/dist/esri-leaflet.js"
             integrity="sha512-Np+ry4Dro5siJ1HZ0hTwn2jsmu/hMNrYw1EIK9EjsEVbDge4AaQhjeTGRg2ispHg7ZgDMVrSDjNrzH/kAO9Law=="
