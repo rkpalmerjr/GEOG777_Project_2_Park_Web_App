@@ -1,7 +1,7 @@
 /* Kevin Palmer, UW-Madison, GEOG777, Fall 2019, Project 2 */
 
 
-// Create the map
+// Define the map div
 var map = L.map('map', {
     zoomControl: false, // disable default leaflet zoom controls
     center: [38.872778, -77.0075],
@@ -26,32 +26,68 @@ L.control.locate().addTo(map);
 var streets = L.esri.basemapLayer(('Streets'), {
     // detectRetina: true,
     maxZoom: 21,
-}).addTo(map);
+}).addTo(map); //Default basemap is streets
 var imagery = L.esri.basemapLayer(('Imagery'), {
     // detectRetina: true,
     maxZoom: 21,
 });
 
 
-// Create basemap tileset layers
+// Define basemap tileset layers
 var baseMaps = {
     "Street Map": streets,
     "Imagery": imagery
 };
 
 
-// Marker Icons
+// Define Marker Icons
+var merchIcon = L.icon({
+    iconUrl: 'img/clothing-store-15.svg',
+    iconSize: [25, 25]
+});
+var snacksIcon = L.icon({
+    iconUrl: 'img/confectionery-15.svg',
+    iconSize: [25, 25]
+});
+var grillIcon = L.icon({
+    iconUrl: 'img/fast-food-15.svg',
+    iconSize: [25, 25]
+});
+var vegetarianIcon = L.icon({
+    iconUrl: 'img/garden-15.svg',
+    iconSize: [25, 25]
+});
+var iceCreamIcon = L.icon({
+    iconUrl: 'img/ice-cream-15.svg',
+    iconSize: [25, 25]
+});
+var premiumIcon = L.icon({
+    iconUrl: 'img/restaurant-15.svg',
+    iconSize: [25, 25]
+});
+var pizzaIcon = L.icon({
+    iconUrl: 'img/restaurant-pizza-15.svg',
+    iconSize: [25, 25]
+});
+var seafoodIcon = L.icon({
+    iconUrl: 'img/restaurant-seafood-15.svg',
+    iconSize: [25, 25]
+});
+var beerIcon = L.icon({
+    iconUrl: 'img/beer-15.svg',
+    iconSize: [25, 25]
+});
 var toiletManIcon = L.icon({
     iconUrl: 'img/toilet-man-15.svg',
-    iconSize: [25, 25]
+    iconSize: [20, 20]
 });
 var toiletWomanIcon = L.icon({
     iconUrl: 'img/toilet-woman-15.svg',
-    iconSize: [25, 25]
+    iconSize: [20, 20]
 });
 var toiletFamilyIcon = L.icon({
     iconUrl: 'img/toilet-family-15.svg',
-    iconSize: [25, 25]
+    iconSize: [20, 20]
 });
 var gateIcon = L.icon({
     iconUrl: 'img/roadblock-15.svg',
@@ -76,14 +112,61 @@ var parkingIcon = L.icon({
 
 
 // Define overlay layers
-// var merch = L.esri.featureLayer({
-//     url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/2'
-// });
-// var food = L.esri.featureLayer({
-//     url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/3'
-// });
+var merch = L.esri.featureLayer({
+    url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/2',
+    pointToLayer: function (feature, latlng) {
+        return L.marker(latlng, {
+            icon: merchIcon
+        });
+    }
+});
+var food = L.esri.featureLayer({
+    url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/3',
+    pointToLayer: function (feature, latlng) {
+        if (feature.properties.type == 'Snacks') {
+            return L.marker(latlng, {
+                icon: snacksIcon
+            });
+        }
+        if (feature.properties.type == 'Grill') {
+            return L.marker(latlng, {
+                icon: grillIcon
+            });
+        }
+        if (feature.properties.type == 'Vegetarian') {
+            return L.marker(latlng, {
+                icon: vegetarianIcon
+            });
+        }
+        if (feature.properties.type == 'Ice Cream') {
+            return L.marker(latlng, {
+                icon: iceCreamIcon
+            });
+        }
+        if (feature.properties.type == 'Premium') {
+            return L.marker(latlng, {
+                icon: premiumIcon
+            });
+        }
+        if (feature.properties.type == 'Pizza') {
+            return L.marker(latlng, {
+                icon: pizzaIcon
+            });
+        }
+        if (feature.properties.type == 'Seafood') {
+            return L.marker(latlng, {
+                icon: seafoodIcon
+            });
+        }
+    }
+});
 var beer = L.esri.featureLayer({
-    url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/4'
+    url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/4',
+    pointToLayer: function (feature, latlng) {
+        return L.marker(latlng, {
+            icon: beerIcon
+        });
+    }
 });
 var restrooms = L.esri.featureLayer({
     url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/5',
@@ -183,7 +266,7 @@ var parkBoundary = L.esri.featureLayer({
 }).addTo(map);
 
 
-// Min zoom control for labels
+// Min zoom control for section labels
 // https://gis.stackexchange.com/questions/182628/leaflet-layers-on-different-zoom-levels-how
 map.on('zoomend', function () {
     var zoomlevel = map.getZoom();
@@ -205,10 +288,10 @@ map.on('zoomend', function () {
 });
 
 
-// Create overlay layers
+// Define overlay layers
 var overlays = {
-    // "Merchandise": merch,
-    // "Food": food,
+    "Merchandise": merch,
+    "Food": food,
     "Beer": beer,
     "Restrooms": restrooms,
     "Seat Sections": sectionsGroup,
@@ -219,48 +302,11 @@ var overlays = {
 };
 
 
-// Add layers control to the map
+// Add basemap/overlay layers control to the map
 var layerControl = L.control.layers(baseMaps, overlays);
 layerControl.addTo(map);
 $('<p class = "controlHeader"><b>Basemaps</b></p>').insertBefore('div.leaflet-control-layers-base');
 $('<p class = "controlHeader"><b>Layers</b></p>').insertBefore('div.leaflet-control-layers-overlays');
-
-
-// // Create labels for layers (esri leaflet)
-// // https://esri.github.io/esri-leaflet/examples/labeling-features.html
-// var labels = {};
-
-// sections.on('createfeature', function (e) {
-//     var id = e.feature.id;
-//     var feature = sections.getFeature(id);
-//     var center = feature.getCenter();
-//     var label = L.marker(center, {
-//         icon: L.divIcon({
-//             iconSize: null,
-//             className: 'label',
-//             html: '<div>' + e.feature.properties.section + '</div>'
-//         })
-//     }).addTo(map);
-//     labels[id] = label;
-// });
-
-// sections.on('addfeature', function (e){
-//     var label = labels[e.feature.id];
-//     if (label) {
-//         label.addTo(map);
-//     }
-// });
-
-// sections.on('removefeature', function (e) {
-//     var label = labels[e.feature.id];
-//     if (label) {
-//         map.removeLayer(label);
-//     }
-// });
-
-
-// Create labels for layers (leaflet plugin)
-// https://github.com/Leaflet/Leaflet.label
 
 
 // Search Control
@@ -268,6 +314,8 @@ $('<p class = "controlHeader"><b>Layers</b></p>').insertBefore('div.leaflet-cont
 // http://esri.github.io/esri-leaflet/api-reference/controls/geosearch.html
 // https://esri.github.io/esri-leaflet/examples/search-feature-layer.html
 // var arcgisOnline = L.esri.Geocoding.arcgisOnlineProvider();
+
+// NOTE:  "searchFields" seems to only work with string fields
 
 var searchControl = L.esri.Geocoding.geosearch({
     position: 'bottomright',
@@ -278,23 +326,43 @@ var searchControl = L.esri.Geocoding.geosearch({
     providers: [
         // arcgisOnline, // Address geocoder
         L.esri.Geocoding.featureLayerProvider({
+            url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/2',
+            searchFields: ['name'],
+            label: 'Merchandise',
+            maxResults: 100,
+            bufferRadius: 200,
+            formatSuggestion: function (feature) {
+                return feature.properties.name + " - Section " + feature.properties.location.toString() + " - " + feature.properties.concourse + " Concourse"
+            }
+        }),
+        L.esri.Geocoding.featureLayerProvider({
+            url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/3',
+            searchFields: ['name', 'type'],
+            label: 'Food',
+            maxResults: 100,
+            bufferRadius: 200,
+            formatSuggestion: function (feature) {
+                return feature.properties.name + " - " + feature.properties.type + " - Section " + feature.properties.location.toString() + " - " + feature.properties.concourse + " Concourse"
+            }
+        }),
+        L.esri.Geocoding.featureLayerProvider({
             url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/4',
             searchFields: ['name'],
             label: 'Beer',
             maxResults: 100,
             bufferRadius: 50,
             formatSuggestion: function (feature) {
-                return feature.properties.name + " - Section " + feature.properties.location.toString()
+                return feature.properties.name + " - Section " + feature.properties.location.toString() + " - " + feature.properties.concourse + " Concourse"
             }
         }),
         L.esri.Geocoding.featureLayerProvider({
             url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/5',
-            searchFields: ['type'], // Search field seems to only work with string fields
+            searchFields: ['type'],
             label: 'Restrooms',
             maxResults: 100,
             bufferRadius: 50,
             formatSuggestion: function (feature) {
-                return feature.properties.type + " - Section " + feature.properties.location
+                return feature.properties.type + " - Section " + feature.properties.location.toString()
             }
         }),
         L.esri.Geocoding.featureLayerProvider({
@@ -304,7 +372,37 @@ var searchControl = L.esri.Geocoding.geosearch({
             maxResults: 100,
             bufferRadius: 200,
             formatSuggestion: function (feature) {
-                return feature.properties.section + " - " + feature.properties.location
+                return feature.properties.section + " - " + feature.properties.location + " - " + feature.properties.concourse + " Concourse"
+            }
+        }),
+        L.esri.Geocoding.featureLayerProvider({
+            url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/1',
+            searchFields: ['name'],
+            label: 'Gates',
+            maxResults: 100,
+            bufferRadius: 200,
+            formatSuggestion: function (feature) {
+                return feature.properties.name
+            }
+        }),
+        L.esri.Geocoding.featureLayerProvider({
+            url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/0',
+            searchFields: ['name', 'type'],
+            label: 'Public Transportation',
+            maxResults: 100,
+            bufferRadius: 200,
+            formatSuggestion: function (feature) {
+                return feature.properties.name + " - " + feature.properties.type
+            }
+        }),
+        L.esri.Geocoding.featureLayerProvider({
+            url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/7',
+            searchFields: ['name'],
+            label: 'Parking',
+            maxResults: 100,
+            bufferRadius: 200,
+            formatSuggestion: function (feature) {
+                return feature.properties.name
             }
         })
     ]
