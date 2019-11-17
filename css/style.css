@@ -4,7 +4,49 @@ body {
     margin: 0;
 }
 
-html, body, #map {
+html,
+body {
     height: 100vh;
     width: 100vw;
+}
+
+#map {
+    height: calc(100vh - 24px);
+    width: 100vw;
+}
+
+.geocoder-control-expanded,
+.leaflet-touch .geocoder-control-expanded,
+.geocoder-control-suggestions,
+.leaflet-touch .geocoder-control-suggestions {
+    width: calc(100vw - 19px);
+}
+
+.leaflet-touch .geocoder-control.geocoder-control-expanded {
+    width: calc(100vw - 19px);
+}
+
+.label {
+    font-weight: 700;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.label div {
+    position: relative;
+    left: -50%;
+    bottom: 50%;
+}
+
+.leaflet-tooltip-pane .sectionText {
+    color: red;
+    font-weight: bold;
+    text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white;;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+}
+
+.leaflet-container .sectionText {
+    font-size: 14px
 }

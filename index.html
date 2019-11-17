@@ -8,6 +8,9 @@
         <title>Nationals Park Mobile Map</title>
         <!-- CSS Links -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@2.3.2/dist/esri-leaflet-geocoder.css"
+            integrity="sha512-IM3Hs+feyi40yZhDH6kV8vQMg4Fh20s9OzInIIAc4nx7aMYMfo+IenRUekoYsHZqGkREUgx0VvlEsgm7nCDW9g=="
+            crossorigin="">
         <link rel="stylesheet" href="lib/leaflet.zoomhome.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.css">
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css">
@@ -16,13 +19,12 @@
         <link href="css/style.css" rel="stylesheet">
     </head>
     <body>
-        <div style="background-color:red">
-            <center>Nats Park</center>
+        <div id="banner", style="background-color:red">
+            <center>
+                <font color="white"><b>Nationals Park Explorer</b></font>
+            </center>
         </div>
         <div id="map"></div>
-        <!-- <div style="background-color:red; position: absolute; bottom:0">
-            <center>Nats Park</center>
-        </div> -->
         <!-- Data -->
         <!-- External script links -->
         <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
@@ -31,12 +33,15 @@
         <script src="https://unpkg.com/esri-leaflet@2.3.1/dist/esri-leaflet.js"
             integrity="sha512-Np+ry4Dro5siJ1HZ0hTwn2jsmu/hMNrYw1EIK9EjsEVbDge4AaQhjeTGRg2ispHg7ZgDMVrSDjNrzH/kAO9Law=="
             crossorigin=""></script>
-        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
-            integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
-            crossorigin="anonymous"></script>
+        <script src="https://unpkg.com/esri-leaflet-geocoder@2.3.2/dist/esri-leaflet-geocoder.js"
+            integrity="sha512-8twnXcrOGP3WfMvjB0jS5pNigFuIWj4ALwWEgxhZ+mxvjF5/FBPVd5uAxqT8dd2kUmTVK9+yQJ4CmTmSg/sXAQ=="
+            crossorigin=""></script>
+        <script src="https://cdn.jsdelivr.net/gh/cbaines/leaflet-indoor/leaflet-indoor.js"></script>
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
             integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
             crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+            integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
             integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
             crossorigin="anonymous"></script>
