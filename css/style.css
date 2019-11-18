@@ -13,8 +13,8 @@ body {
 }
 
 #map {
-    height: calc(100vh - 24px);
-    width: 100vw;
+    height: calc(100vh - 36px);
+    width: calc(100vw - 6px);
 }
 
 .geocoder-control-expanded,
@@ -51,4 +51,8 @@ body {
 
 .leaflet-container .sectionText {
     font-size: 14px
+}
+
+.leaflet-retina .leaflet-control-layers-toggle {
+    background-image: url("../img/layer-group.svg")
 }

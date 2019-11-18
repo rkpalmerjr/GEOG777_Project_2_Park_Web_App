@@ -41,6 +41,10 @@ var baseMaps = {
 
 
 // Define Marker Icons
+var natsIcon = L.icon({
+    iconUrl: 'img/Washington-Nationals-Marker.svg',
+    iconSize: [45, 45] 
+});
 var merchIcon = L.icon({
     iconUrl: 'img/clothing-store-15.svg',
     iconSize: [25, 25]
@@ -114,14 +118,19 @@ var parkingIcon = L.icon({
 // Define overlay layers
 var merch = L.esri.featureLayer({
     url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/2',
+    minZoom: 15,
     pointToLayer: function (feature, latlng) {
         return L.marker(latlng, {
             icon: merchIcon
         });
     }
 });
+merch.bindPopup(function (layer) {
+    return L.Util.template('<p><strong>{name} - Section {location}</strong></p>', layer.feature.properties);
+});
 var food = L.esri.featureLayer({
     url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/3',
+    minZoom: 15,
     pointToLayer: function (feature, latlng) {
         if (feature.properties.type == 'Snacks') {
             return L.marker(latlng, {
@@ -160,16 +169,24 @@ var food = L.esri.featureLayer({
         }
     }
 });
+food.bindPopup(function (layer) {
+    return L.Util.template('<p><strong>{name} - {type} - Section {location}</strong></p>', layer.feature.properties);
+});
 var beer = L.esri.featureLayer({
     url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/4',
+    minZoom: 15,
     pointToLayer: function (feature, latlng) {
         return L.marker(latlng, {
             icon: beerIcon
         });
     }
 });
+beer.bindPopup(function (layer) {
+    return L.Util.template('<p><strong>{name} - Section {location}</strong></p>', layer.feature.properties);
+});
 var restrooms = L.esri.featureLayer({
     url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/5',
+    minZoom: 15,
     pointToLayer: function (feature, latlng) {
         if (feature.properties.type == 'Mens') {
             return L.marker(latlng, {
@@ -188,15 +205,20 @@ var restrooms = L.esri.featureLayer({
         }
     }
 });
+restrooms.bindPopup(function (layer) {
+    return L.Util.template('<p><strong>{type} Restroom - Section {location}</strong></p>', layer.feature.properties);
+});
 var sectionsGroup = L.featureGroup();
 var sectionsLabels = L.featureGroup();
 var sections = L.esri.featureLayer({
     url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/6',
+    minZoom: 14,
     style: {
         color: 'red',
         fillOpacity: '0.25',
         weight: '1'
     },
+    minZoom: 15,
     onEachFeature: function (feature, layer) {
         var bounds = layer.getBounds();
         var center = bounds.getCenter();
@@ -210,19 +232,27 @@ var sections = L.esri.featureLayer({
         label.addTo(sectionsLabels);
     }
 }).addTo(sectionsGroup);
+sections.bindPopup(function (layer) {
+    return L.Util.template('<p><strong>Section: {section}</strong></p>', layer.feature.properties);
+});
 sectionsGroup.addTo(map);
 var gate = L.esri.featureLayer({
     url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/1',
+    minZoom: 15,
     pointToLayer: function (feature, latlng) {
         return L.marker(latlng, {
             icon: gateIcon
         });
     }
 }).addTo(map);
+gate.bindPopup(function (layer) {
+    return L.Util.template('<p><strong>{name}</strong></p>', layer.feature.properties);
+});
 var publicTrans = L.esri.featureLayer({
     url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/0',
+    minZoom: 14,
     pointToLayer: function(feature, latlng) {
-        if (feature.properties.type == 'Metro') {
+        if (feature.properties.type == 'Metrorail') {
             return L.marker (latlng, {
                 icon: metroIcon
             });
@@ -239,9 +269,14 @@ var publicTrans = L.esri.featureLayer({
         }
     }
 }).addTo(map);
+publicTrans.bindPopup(function (layer) {
+    return L.Util.template('<p><strong>{name}</strong></p>', layer.feature.properties);
+});
 var parkingGroup = L.featureGroup();
-var parking = L.esri.featureLayer({
+var parkingPoint = L.featureGroup();
+var parkingPoly = L.esri.featureLayer({
     url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/7',
+    minZoom: 14,
     style: {
         color: 'black',
         fillOpacity: '0.25',
@@ -251,19 +286,34 @@ var parking = L.esri.featureLayer({
         var bounds = layer.getBounds();
         var center = bounds.getCenter();
         var marker = L.marker(center, {
-            icon: parkingIcon
-        }).addTo(parkingGroup);
+            icon: parkingIcon,
+            clickable: false // This doesn't seem to work
+        }).addTo(parkingPoint);
     }
 }).addTo(parkingGroup);
+parkingPoly.bindPopup(function (layer) {
+    return L.Util.template('<p><strong>{name}</strong></p>', layer.feature.properties);
+});
+parkingPoint.addTo(parkingGroup);
 parkingGroup.addTo(map);
+var parkGroup = L.featureGroup();
+var parkPoint = L.featureGroup();
 var parkBoundary = L.esri.featureLayer({
     url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/8',
     style: {
         color: 'red',
         fillOpacity: '0.05',
         weight: '.75'
+    },
+    onEachFeature: function (feature, layer) {
+        var bounds = layer.getBounds();
+        var center = bounds.getCenter();
+        var marker = L.marker(center, {
+            icon: natsIcon,
+        }).addTo(parkPoint);
     }
-}).addTo(map);
+}).addTo(parkGroup);
+parkGroup.addTo(map);
 
 
 // Min zoom control for section labels
@@ -284,29 +334,61 @@ map.on('zoomend', function () {
             sectionsGroup.addLayer(sectionsLabels);
         }
     }
+    if (zoomlevel < 14) {
+        if (map.hasLayer(parkingPoint)) {
+            map.removeLayer(parkingPoint);
+        } else {
+            console.log("No layer active")
+        }
+    }
+    if (zoomlevel >= 14) {
+        if (map.hasLayer(parkingPoint)) {
+            console.log("Layer already added");
+        } else {
+            map.addLayer(parkingPoint);
+        }
+    }
+    if (zoomlevel >= 14) {
+        if (map.hasLayer(parkPoint)) {
+            map.removeLayer(parkPoint);
+        } else {
+            console.log("No layer active")
+        }
+    }
+    if (zoomlevel < 14) {
+        if (map.hasLayer(parkPoint)) {
+            console.log("Layer already added");
+        } else {
+            map.addLayer(parkPoint);
+        }
+    }
     console.log("Current Zoom Level = " + zoomlevel);
 });
 
 
 // Define overlay layers
-var overlays = {
-    "Merchandise": merch,
-    "Food": food,
-    "Beer": beer,
-    "Restrooms": restrooms,
-    "Seat Sections": sectionsGroup,
-    "Gates": gate,
-    "Public Transportation": publicTrans,
-    "Parking": parkingGroup,
-    "Nats Park Boundary": parkBoundary
+var groupedOverlays = {
+    "Concessions and Restrooms": {
+        "Merchandise": merch,
+        "Food": food,
+        "Beer": beer,
+        "Restrooms": restrooms
+    },
+    "Seats, Gates, Transportation": {
+        "Seat Sections": sectionsGroup,
+        "Gates": gate,
+        "Public Transportation": publicTrans,
+        "Parking": parkingGroup,
+        "Nats Park Boundary": parkBoundary
+    }
 };
 
 
 // Add basemap/overlay layers control to the map
-var layerControl = L.control.layers(baseMaps, overlays);
+// https://github.com/ismyrnow/leaflet-groupedlayercontrol
+var layerControl = L.control.groupedLayers(baseMaps, groupedOverlays);
 layerControl.addTo(map);
-$('<p class = "controlHeader"><b>Basemaps</b></p>').insertBefore('div.leaflet-control-layers-base');
-$('<p class = "controlHeader"><b>Layers</b></p>').insertBefore('div.leaflet-control-layers-overlays');
+$('<p class = "controlHeader" style="margin-bottom: 8px"><b>Basemaps</b></p>').insertBefore('div.leaflet-control-layers-base');
 
 
 // Search Control
@@ -322,7 +404,7 @@ var searchControl = L.esri.Geocoding.geosearch({
     useMapBounds: false,
     collapseAfterResult: false,
     expanded: true,
-    placeholder: 'Search here for things (sections, beer, restrooms, etc.)',
+    placeholder: 'Search here for things (food, beer, restrooms, etc.)',
     providers: [
         // arcgisOnline, // Address geocoder
         L.esri.Geocoding.featureLayerProvider({
@@ -330,7 +412,7 @@ var searchControl = L.esri.Geocoding.geosearch({
             searchFields: ['name'],
             label: 'Merchandise',
             maxResults: 100,
-            bufferRadius: 200,
+            bufferRadius: 50,
             formatSuggestion: function (feature) {
                 return feature.properties.name + " - Section " + feature.properties.location.toString() + " - " + feature.properties.concourse + " Concourse"
             }
@@ -340,7 +422,7 @@ var searchControl = L.esri.Geocoding.geosearch({
             searchFields: ['name', 'type'],
             label: 'Food',
             maxResults: 100,
-            bufferRadius: 200,
+            bufferRadius: 50,
             formatSuggestion: function (feature) {
                 return feature.properties.name + " - " + feature.properties.type + " - Section " + feature.properties.location.toString() + " - " + feature.properties.concourse + " Concourse"
             }
@@ -370,7 +452,7 @@ var searchControl = L.esri.Geocoding.geosearch({
             searchFields: ['section', 'location'],
             label: 'Seating Sections',
             maxResults: 100,
-            bufferRadius: 200,
+            bufferRadius: 50,
             formatSuggestion: function (feature) {
                 return feature.properties.section + " - " + feature.properties.location + " - " + feature.properties.concourse + " Concourse"
             }
@@ -380,7 +462,7 @@ var searchControl = L.esri.Geocoding.geosearch({
             searchFields: ['name'],
             label: 'Gates',
             maxResults: 100,
-            bufferRadius: 200,
+            bufferRadius: 50,
             formatSuggestion: function (feature) {
                 return feature.properties.name
             }
@@ -390,7 +472,7 @@ var searchControl = L.esri.Geocoding.geosearch({
             searchFields: ['name', 'type'],
             label: 'Public Transportation',
             maxResults: 100,
-            bufferRadius: 200,
+            bufferRadius: 50,
             formatSuggestion: function (feature) {
                 return feature.properties.name + " - " + feature.properties.type
             }
@@ -400,7 +482,7 @@ var searchControl = L.esri.Geocoding.geosearch({
             searchFields: ['name'],
             label: 'Parking',
             maxResults: 100,
-            bufferRadius: 200,
+            bufferRadius: 50,
             formatSuggestion: function (feature) {
                 return feature.properties.name
             }
@@ -417,19 +499,22 @@ var searchControl = L.esri.Geocoding.geosearch({
 //         return;
 //     }
 
+//     // console.log(featureCollection);
 //     var indoorLayer = new L.Indoor(featureCollection, {
 //         getLevel: function (feature) {
-//             return feature.properties.concourse;
+//             // console.log(feature.properties.level);
+//             return feature.properties.level;
 //         }
 //     });
 //     // set the initial level to show
-//     indoorLayer.setLevel('Main');
-//     indoorLayer.addTo(map);
+//     indoorLayer.setLevel(1);
+//     // indoorLayer.addTo(map);
 
 //     // Add Level Control (code from https://github.com/cbaines/leaflet-indoor)
 //     var levelControl = new L.Control.Level({
-//         level: 'Main',
-//         levels: indoorLayer.getLevels()
+//         level: 1,
+//         levels: [1,2,3,4],
+//         position: "topleft"
 //     });
 
 //     // Connect the level control to the indoor layer

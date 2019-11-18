@@ -14,18 +14,19 @@
             integrity="sha512-IM3Hs+feyi40yZhDH6kV8vQMg4Fh20s9OzInIIAc4nx7aMYMfo+IenRUekoYsHZqGkREUgx0VvlEsgm7nCDW9g=="
             crossorigin="">
         <link rel="stylesheet" href="lib/leaflet.zoomhome.css">
+        <link rel="stylesheet" href="lib/leaflet.groupedlayercontrol.min.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.css">
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
             integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link href="css/style.css" rel="stylesheet">
     </head>
-    <body>
-        <div id="banner", style="background-color:red">
-            <div style="text-align: center; margin:0; position: relative; top:50%; transform: translateY(-10%)">
-                <img src="img/Washington-Nationals-Cap-Insignia-01.svg" alt="Nationals Logo" width="20" height="20">
-                <font color="white"><b>Nationals Park Explorer</b></font>
-                <img src="img/Washington-Nationals-Cap-Insignia-01.svg" alt="Nationals Logo" width="20" height="20">
+    <body style="border-style: solid; border-color: white">
+        <div id="banner", style="background-color:red; border-style:solid; border-color:navy">
+            <div style="text-align: center">
+                <img src="img/Washington-Nationals-Cap-Insignia-01.svg" alt="Nationals Logo" width="20" height="20" style="position:relative; top: -2px">
+                <font color="white"><b style="padding-left: 30px; padding-right: 30px">Nationals Park Explorer</b></font>
+                <img src="img/Washington-Nationals-Cap-Insignia-01.svg" alt="Nationals Logo" width="20" height="20" style="position:relative; top: -2px">
             </div>
         </div>
         <div id="map"></div>
@@ -33,6 +34,7 @@
         <!-- External script links -->
         <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
         <script src="lib/leaflet.zoomhome.min.js"></script>
+        <script src="lib/leaflet.groupedlayercontrol.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/src/L.Control.Locate.min.js" charset="utf-8"></script>
         <script src="https://unpkg.com/esri-leaflet@2.3.1/dist/esri-leaflet.js"
             integrity="sha512-Np+ry4Dro5siJ1HZ0hTwn2jsmu/hMNrYw1EIK9EjsEVbDge4AaQhjeTGRg2ispHg7ZgDMVrSDjNrzH/kAO9Law=="
