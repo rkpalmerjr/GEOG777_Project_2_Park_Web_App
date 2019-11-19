@@ -5,7 +5,7 @@
 var map = L.map('map', {
     zoomControl: false, // disable default leaflet zoom controls
     center: [38.872778, -77.0075],
-    zoom: 16,
+    zoom: 13,
     minZoom: 12,
     maxZoom: 19,
 });
@@ -126,7 +126,7 @@ var merch = L.esri.featureLayer({
     }
 });
 merch.bindPopup(function (layer) {
-    return L.Util.template('<p><strong>{name} - Section {location}</strong></p>', layer.feature.properties);
+    return L.Util.template('<p><strong>{name} - Section {section}</strong></p>', layer.feature.properties);
 });
 var food = L.esri.featureLayer({
     url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/3',
@@ -170,7 +170,7 @@ var food = L.esri.featureLayer({
     }
 });
 food.bindPopup(function (layer) {
-    return L.Util.template('<p><strong>{name} - {type} - Section {location}</strong></p>', layer.feature.properties);
+    return L.Util.template('<p><strong>{name} - {type} - Section {section}</strong></p>', layer.feature.properties);
 });
 var beer = L.esri.featureLayer({
     url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/4',
@@ -182,7 +182,7 @@ var beer = L.esri.featureLayer({
     }
 });
 beer.bindPopup(function (layer) {
-    return L.Util.template('<p><strong>{name} - Section {location}</strong></p>', layer.feature.properties);
+    return L.Util.template('<p><strong>{name} - Section {section} - Beer Brands: {brands}</strong></p>', layer.feature.properties);
 });
 var restrooms = L.esri.featureLayer({
     url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/5',
@@ -206,7 +206,7 @@ var restrooms = L.esri.featureLayer({
     }
 });
 restrooms.bindPopup(function (layer) {
-    return L.Util.template('<p><strong>{type} Restroom - Section {location}</strong></p>', layer.feature.properties);
+    return L.Util.template('<p><strong>{type} Restroom - Section {section}</strong></p>', layer.feature.properties);
 });
 var sectionsGroup = L.featureGroup();
 var sectionsLabels = L.featureGroup();
@@ -314,6 +314,7 @@ var parkBoundary = L.esri.featureLayer({
     }
 }).addTo(parkGroup);
 parkGroup.addTo(map);
+parkPoint.addTo(map);
 
 
 // Min zoom control for section labels
@@ -371,7 +372,7 @@ var groupedOverlays = {
     "Concessions and Restrooms": {
         "Merchandise": merch,
         "Food": food,
-        "Beer": beer,
+        "Craft Beer": beer,
         "Restrooms": restrooms
     },
     "Seats, Gates, Transportation": {
@@ -409,47 +410,47 @@ var searchControl = L.esri.Geocoding.geosearch({
         // arcgisOnline, // Address geocoder
         L.esri.Geocoding.featureLayerProvider({
             url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/2',
-            searchFields: ['name'],
+            searchFields: ['tags', 'name'],
             label: 'Merchandise',
             maxResults: 100,
             bufferRadius: 50,
             formatSuggestion: function (feature) {
-                return feature.properties.name + " - Section " + feature.properties.location.toString() + " - " + feature.properties.concourse + " Concourse"
+                return feature.properties.name + " - Section " + feature.properties.section + " - " + feature.properties.concourse + " Concourse"
             }
         }),
         L.esri.Geocoding.featureLayerProvider({
             url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/3',
-            searchFields: ['name', 'type'],
+            searchFields: ['tags', 'name', 'type'],
             label: 'Food',
             maxResults: 100,
             bufferRadius: 50,
             formatSuggestion: function (feature) {
-                return feature.properties.name + " - " + feature.properties.type + " - Section " + feature.properties.location.toString() + " - " + feature.properties.concourse + " Concourse"
+                return feature.properties.name + " - " + feature.properties.type + " - Section " + feature.properties.section + " - " + feature.properties.concourse + " Concourse"
             }
         }),
         L.esri.Geocoding.featureLayerProvider({
             url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/4',
-            searchFields: ['name'],
+            searchFields: ['tags', 'name', 'brands'],
             label: 'Beer',
             maxResults: 100,
             bufferRadius: 50,
             formatSuggestion: function (feature) {
-                return feature.properties.name + " - Section " + feature.properties.location.toString() + " - " + feature.properties.concourse + " Concourse"
+                return feature.properties.name + " - Section " + feature.properties.section + " - " + feature.properties.concourse + " Concourse"
             }
         }),
         L.esri.Geocoding.featureLayerProvider({
             url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/5',
-            searchFields: ['type'],
+            searchFields: ['tags', 'type'],
             label: 'Restrooms',
             maxResults: 100,
             bufferRadius: 50,
             formatSuggestion: function (feature) {
-                return feature.properties.type + " - Section " + feature.properties.location.toString()
+                return feature.properties.type + " - Section " + feature.properties.section
             }
         }),
         L.esri.Geocoding.featureLayerProvider({
             url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/6',
-            searchFields: ['section', 'location'],
+            searchFields: ['tags', 'section', 'location'],
             label: 'Seating Sections',
             maxResults: 100,
             bufferRadius: 50,
@@ -459,7 +460,7 @@ var searchControl = L.esri.Geocoding.geosearch({
         }),
         L.esri.Geocoding.featureLayerProvider({
             url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/1',
-            searchFields: ['name'],
+            searchFields: ['tags', 'name'],
             label: 'Gates',
             maxResults: 100,
             bufferRadius: 50,
@@ -469,7 +470,7 @@ var searchControl = L.esri.Geocoding.geosearch({
         }),
         L.esri.Geocoding.featureLayerProvider({
             url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/0',
-            searchFields: ['name', 'type'],
+            searchFields: ['tags', 'name', 'type'],
             label: 'Public Transportation',
             maxResults: 100,
             bufferRadius: 50,
@@ -479,7 +480,7 @@ var searchControl = L.esri.Geocoding.geosearch({
         }),
         L.esri.Geocoding.featureLayerProvider({
             url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/7',
-            searchFields: ['name'],
+            searchFields: ['tags', 'name'],
             label: 'Parking',
             maxResults: 100,
             bufferRadius: 50,
@@ -491,34 +492,43 @@ var searchControl = L.esri.Geocoding.geosearch({
 }).addTo(map);
 
 
-// // Level/Concourse Control
-// // https://esri.github.io/esri-leaflet/examples/indoors.html
-// // Run a query against our Feature Layer (that we have not added to the map) to get a FeatureCollection (https://tools.ietf.org/html/rfc7946#section-3.3)
-// sections.query().run(function (error, featureCollection) {
-//     if (error) {
-//         return;
-//     }
+// Leaflet easy button
+// https://github.com/CliffCloud/Leaflet.EasyButton
+L.easyButton('fa-star', function () {
+    alert('You just clicked the star button.\n\nThe submit review functionality is currently in development and not yet ready for use.\n\nUntil then...Make a wish!  A curly "W" maybe?');
+}).addTo(map);
 
-//     // console.log(featureCollection);
-//     var indoorLayer = new L.Indoor(featureCollection, {
-//         getLevel: function (feature) {
-//             // console.log(feature.properties.level);
-//             return feature.properties.level;
-//         }
-//     });
-//     // set the initial level to show
-//     indoorLayer.setLevel(1);
-//     // indoorLayer.addTo(map);
 
-//     // Add Level Control (code from https://github.com/cbaines/leaflet-indoor)
-//     var levelControl = new L.Control.Level({
-//         level: 1,
-//         levels: [1,2,3,4],
-//         position: "topleft"
-//     });
+// Level/Concourse Control
+// https://esri.github.io/esri-leaflet/examples/indoors.html
+// Run a query against our Feature Layer (that we have not added to the map) to get a FeatureCollection (https://tools.ietf.org/html/rfc7946#section-3.3)
+sections.query().run(function (error, featureCollection) {
+    if (error) {
+        return;
+    }
 
-//     // Connect the level control to the indoor layer
-//     levelControl.addEventListener('levelchange', indoorLayer.setLevel, indoorLayer);
+    // console.log(featureCollection);
+    var indoorLayer = new L.Indoor(featureCollection, {
+        getLevel: function (feature) {
+            // console.log(feature.properties.level);
+            return feature.properties.level;
+        }
+    });
+    // set the initial level to show
+    indoorLayer.setLevel(1);
+    // indoorLayer.addTo(map);
 
-//     levelControl.addTo(map);
-// });
+    // Add Level Control (code from https://github.com/cbaines/leaflet-indoor)
+    var levelControl = new L.Control.Level({
+        level: 1,
+        levels: [1,2,3,4],
+        position: "topleft"
+    });
+
+    // Connect the level control to the indoor layer
+    // levelControl.addEventListener('levelchange', indoorLayer.setLevel, indoorLayer); // Disabled while in development
+    levelControl.addEventListener('levelchange', function() {
+       alert('You just clicked a level change control button.\n\nThe level change functionality is currently in development and not yet ready for use.\n\nUntil then please continue to enjoy using and exploring this app for the first level/main concourse.') 
+    });
+    levelControl.addTo(map);
+});
