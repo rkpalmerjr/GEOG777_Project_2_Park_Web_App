@@ -211,7 +211,7 @@ restrooms.bindPopup(function (layer) {
 var sectionsGroup = L.featureGroup();
 var sectionsLabels = L.featureGroup();
 var sections = L.esri.featureLayer({
-    url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/6',
+    url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/7',
     minZoom: 14,
     style: {
         color: 'red',
@@ -275,7 +275,7 @@ publicTrans.bindPopup(function (layer) {
 var parkingGroup = L.featureGroup();
 var parkingPoint = L.featureGroup();
 var parkingPoly = L.esri.featureLayer({
-    url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/7',
+    url: 'https://localhost:6443/arcgis/rest/services/GEOG777_Project_2/NatsPark/MapServer/6',
     minZoom: 14,
     style: {
         color: 'black',
